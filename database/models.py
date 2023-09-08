@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import DATERANGE
 
 
 from db import Base
-from association_tables import association_user_clubs, association_user_dormitory_form, association_events_organizers
+from association_tables import association_user_clubs, association_user_dormitory_form, association_events_organizers, association_user_tags, association_event_tags, association_club_tags
 
 
 class User(Base):
@@ -24,6 +24,7 @@ class User(Base):
     dormitory_form_responders = relationship("User", secondary=association_user_dormitory_form, foreign_keys=[association_user_dormitory_form.c.owner_id])
     clubs = relationship("Club", secondary=association_user_clubs, back_populates="members")
     events = relationship("Event", secondary=association_events_organizers, back_populates="user_organizer")
+    tags = relationship("Tag", secondary=association_user_tags, back_populates="users")
 
 
 class Club(Base):
@@ -35,6 +36,7 @@ class Club(Base):
 
     members = relationship("User", secondary=association_user_clubs, back_populates="clubs")
     events = relationship("Event", secondary=association_events_organizers, back_populates="club_organizer")
+    tags = relationship("Tag", secondary=association_club_tags, back_populates="clubs")
 
 
 class Event(Base):
@@ -47,6 +49,7 @@ class Event(Base):
 
     club_organizer = relationship("Club", secondary=association_events_organizers, back_populates="events")
     user_organizer = relationship("User", secondary=association_events_organizers, back_populates="events")
+    tags = relationship("Tag", secondary=association_event_tags, back_populates="events")
 
 
 class DormitoryForm(Base):
@@ -55,3 +58,15 @@ class DormitoryForm(Base):
     id = Column(Integer, primary_key=True, index=True)
     author_id = Column(Integer, ForeignKey("users.id"))
     description = Column(Text, index=True)
+
+
+class Tag(Base):
+    __tablename__ = 'tags'
+
+    id = Column(Integer, primary_key=True, index=True)
+    tag = Column(String, unique=True)
+    is_hard = Column(Boolean, index=True)
+
+    clubs = relationship("Club", secondary=association_club_tags, back_populates="tags")
+    events = relationship("Event", secondary=association_event_tags, back_populates="tags")
+    users = relationship("User", secondary=association_user_tags, back_populates="tags")
