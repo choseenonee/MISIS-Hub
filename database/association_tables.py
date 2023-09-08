@@ -23,11 +23,11 @@ association_events_organizers = Table(
 )
 
 
-association_user_dormitory_form = Table(
-    "association_user_dormitory_form",
+association_user_form = Table(
+    "association_user_form",
     Base.metadata,
     Column("owner_id", ForeignKey("users.id"), primary_key=True),
-    Column("dormitory_form_id", ForeignKey("dormitory_forms.id"), primary_key=True),
+    Column("form_id", ForeignKey("forms.id"), primary_key=True),
     Column('responded_id', ForeignKey("users.id"))
 )
 
@@ -53,4 +53,12 @@ association_event_tags = Table(
     Base.metadata,
     Column("tag_id", ForeignKey("tags.id"), primary_key=True),
     Column("event_id", ForeignKey("events.id"), primary_key=True, nullable=True),
+)
+
+
+association_form_tags = Table(
+    "association_form_tags",
+    Base.metadata,
+    Column("tag_id", ForeignKey("tags.id"), primary_key=True),
+    Column("form_id", ForeignKey("forms.id"), primary_key=True, nullable=True),
 )
