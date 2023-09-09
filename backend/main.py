@@ -21,6 +21,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+dotenv_relative_path = '.env'
+dotenv_path = os.path.abspath(dotenv_relative_path)
+load_dotenv(dotenv_path)
+print(dotenv_path)
+predefined_tags = os.getenv('PREDEFINED_TAGS').split(' ')
+
 app.include_router(router)
 
 models.Base.metadata.create_all(bind=engine)
@@ -35,12 +41,10 @@ def get_db():
 
 
 @app.on_event("startup")
-async def initialize_tags(db: Session = Depends(get_db)):
-    dotenv_relative_path = '../.env'
-    dotenv_path = os.path.abspath(dotenv_relative_path)
-    load_dotenv(dotenv_path)
+async def initialize_tags():
+    global predefined_tags
 
-    predefined_tags = os.getenv('PREDEFINED_TAGS').split(' ')
+    db = SessionLocal()
     for tag_name in predefined_tags:
         tag = models.Tag(tag=tag_name)
         db.add(tag)
