@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, ForeignKey, Boolean
 
 
-from db import Base
+from database.db import Base
 
 
 association_user_clubs = Table(

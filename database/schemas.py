@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Union
 
-from models import *
+from database.models import *
 
 
 class UserBase(BaseModel):

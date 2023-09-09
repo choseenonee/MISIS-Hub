@@ -11,14 +11,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-
-
 if __name__ == '__main__':
     session = SessionLocal()
     try:
         result = session.execute(text('SELECT 1'))
 
-        # Check the result
         if result.scalar() == 1:
             print("Connection to the database successful!")
         else:

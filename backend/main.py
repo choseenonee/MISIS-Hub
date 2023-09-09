@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+import uvicorn
 
 from database.router import router
 from database import models, schemas, CRUD
@@ -35,3 +36,7 @@ def get_matches(db: Session = Depends(get_db)):
     all_users = CRUD.get_all_users(db)
     matched_users = match_users(all_users)
     return matched_users
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
