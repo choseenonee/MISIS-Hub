@@ -10,8 +10,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(login=user.login, email=user.email, phone_number=user.phone_number,
                           hashed_password=user.password, name=user.name, surname=user.surname,
                           description=user.description, dormitory=user.dormitory,
-                          random_coffee_active=user.random_coffee_active,
-                          random_coffee_days_delta=user.random_coffee_days_delta)
+                          random_coffee_active=user.random_coffee_active)
 
     try:
         db.add(db_user)
