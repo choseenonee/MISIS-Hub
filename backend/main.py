@@ -52,7 +52,7 @@ async def initialize_tags():
     for i in range(len(predefined_tags_raw)-1):
         if predefined_tags_raw[i][0].isupper() and predefined_tags_raw[i+1][0].isupper():
             predefined_tags.append(predefined_tags_raw[i])
-        else:
+        elif predefined_tags_raw[i][0].isupper() and predefined_tags_raw[i+1][0].islower():
             predefined_tags.append(predefined_tags_raw[i] + ' ' + predefined_tags_raw[i+1])
 
     db = SessionLocal()
