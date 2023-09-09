@@ -13,6 +13,7 @@ class User(Base):
     login = Column(String, unique=True)
     email = Column(String, unique=True, index=True, nullable=True)
     phone_number = Column(String, nullable=True)
+    telegram = Column(String, nullable=True)
     hashed_password = Column(String)
     name = Column(String)
     surname = Column(String)

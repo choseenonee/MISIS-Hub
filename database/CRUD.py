@@ -19,7 +19,7 @@ def create_user(db: Session, user: schemas.UserInDB):
     return db_user
 
 
-def get_user(db: Session, data: schemas.GetUser):
+def get_user(db: Session, data: schemas.GetUserFromDB):
     if data.login:
         return db.query(models.User).filter(models.User.login == data.login).first()
     elif data.email:
@@ -27,12 +27,27 @@ def get_user(db: Session, data: schemas.GetUser):
     elif data.phone_number:
         return db.query(models.User).filter(models.User )
     else:
-        return '404 not found'
+        raise HTTPException(status_code=404, detail='user not found')
+
+
+def get_all_users(db: Session):
+    return db.query(models.User).all()
+
+
+def add_user_telegram(db: Session, data: schemas.AddUserTelegram):
+    user = get_user(db, schemas.GetUser(**dict(data)))
+    user.telegram = data.telegram
+    try:
+        db.commit()
+        return '200'
+    except Exception as e:
+        raise HTTPException(status_code=500, detail='error while commiting db on adding telegram')
 
 
 def create_form(db: Session, form: schemas.FormCreate):
-    form.tags = [get_tag(tag) for tag in form.tags]
-    db_form = models.Form(**dict(form))
+    form_base = schemas.FormBase(**dict(form))
+    db_form = models.Form(**dict(form_base))
+    db_form.tags = [[get_tag(tag) for tag in form.tags]]
 
     try:
         db.add(db_form)
@@ -43,6 +58,10 @@ def create_form(db: Session, form: schemas.FormCreate):
         raise HTTPException(status_code=500, detail='error while creating form')
 
     return db_form
+
+
+def get_all_forms(db: Session):
+    return db.query(models.Form).all()
 
 
 def get_tag(db: Session, tag: str):

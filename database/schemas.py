@@ -12,14 +12,21 @@ class UserBase(BaseModel):
     description: str | None = None
     dormitory: str | None = None
     random_coffee_active: bool
-    last_random_coffee_meet: datetime
     random_coffee_days_delta: int
 
 
-class GetUser(BaseModel):
+class GetUserFromDB(BaseModel):
     login: str | None = None
     email: str | None = None
     phone_number: str | None = None
+
+
+class GetUser(GetUserFromDB):
+    password: str
+
+
+class AddUserTelegram(GetUser):
+    telegram: str
 
 
 class UserCreate(UserBase):
@@ -34,6 +41,8 @@ class UserInDB(UserCreate):
 
 class User(UserBase):
     id: int
+    telegram: str | None = None
+    last_random_coffee_meet: datetime | None = None
 
     form_responders: List[User] = []
     clubs: List[Club] = []
@@ -81,10 +90,12 @@ class Event(EventCreate):
         arbitrary_types_allowed = True
 
 
-class FormCreate(BaseModel):
+class FormBase(BaseModel):
     author_id: int
     description: str
 
+
+class FormCreate(FormBase):
     tags: List[str] = []
 
 
