@@ -82,3 +82,7 @@ def create_tag(db: Session, tag: schemas.TagCreate):
 
 def get_tag(db: Session, tag: str):
     return db.query(models.Tag).filter(models.Tag.tag == tag).first()
+
+
+def get_all_tags(db: Session):
+    return db.query(models.Tag).all()

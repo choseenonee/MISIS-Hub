@@ -45,11 +45,12 @@ async def initialize_tags():
     global predefined_tags
 
     db = SessionLocal()
-    for tag_name in predefined_tags:
-        tag = models.Tag(tag=tag_name)
-        db.add(tag)
-    db.commit()
-    db.close()
+    if len(CRUD.get_all_tags(db)) == 0:
+        for tag_name in predefined_tags:
+            tag = models.Tag(tag=tag_name)
+            db.add(tag)
+        db.commit()
+        db.close()
 
 
 @app.get("/get_matches", tags=['logic'])
