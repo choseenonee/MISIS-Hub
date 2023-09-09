@@ -28,7 +28,6 @@ app.add_middleware(
 dotenv_relative_path = '.env'
 dotenv_path = os.path.abspath(dotenv_relative_path)
 load_dotenv(dotenv_path)
-print(dotenv_path)
 predefined_tags = os.getenv('PREDEFINED_TAGS').split(' ')
 
 app.include_router(router)
