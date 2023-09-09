@@ -16,8 +16,8 @@ def send_prompt(prompt):
     response = openai.Completion.create(
         engine='text-davinci-003',
         prompt=prompt,
-        temperature=0.6,
-        max_tokens=100,
+        temperature=1,
+        max_tokens=1300,
         n=1,
         stop=None
     )
@@ -45,3 +45,10 @@ def convert_to_tags(text: str) -> List[str]:
     maybe_tags = answer.split(' ')
     validated_tags = [tag for tag in maybe_tags if validate_tag(tag)]
     return validated_tags
+
+
+def get_questions():
+    base_prompt = "генерируй по два вопроса на каждую тему: IT-технологии, цель на жизнь, тема для глубокого разговора, внимательные темы для разговоров, общие темы для разговоров. добавь ещё 3 случайных вопроса. отвечай строго по русски и не создавай никаких заголовков. предоставь мне строго вопросы"
+    answer = send_prompt(base_prompt)
+    answer = answer[answer.find('IT')::]
+    return answer
