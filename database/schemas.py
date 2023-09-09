@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Union
 
@@ -11,6 +11,15 @@ class UserBase(BaseModel):
     surname: str
     description: str | None = None
     dormitory: str | None = None
+    random_coffee_active: bool
+    last_random_coffee_meet: datetime
+    random_coffee_days_delta: int
+
+
+class GetUser(BaseModel):
+    login: str | None = None
+    email: str | None = None
+    phone_number: str | None = None
 
 
 class UserCreate(UserBase):
@@ -19,15 +28,21 @@ class UserCreate(UserBase):
     email: str | None = None
 
 
+class UserInDB(UserCreate):
+    hashed_password: str = Field(..., alias='password')
+
+
 class User(UserBase):
     id: int
+
     form_responders: List[User] = []
     clubs: List[Club] = []
     events: List[Event] = []
     tags: List[Tag] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        arbitrary_types_allowed = True
 
 
 class ClubCreate(BaseModel):
@@ -43,7 +58,8 @@ class Club(ClubCreate):
     tags: List[Tag] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        arbitrary_types_allowed = True
 
 
 class EventCreate(BaseModel):
@@ -61,12 +77,15 @@ class Event(EventCreate):
     tags: List[Tag] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        arbitrary_types_allowed = True
 
 
 class FormCreate(BaseModel):
     author_id: int
     description: str
+
+    tags: List[str] = []
 
 
 class Form(FormCreate):
@@ -75,7 +94,8 @@ class Form(FormCreate):
     tags: List[Tag] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        arbitrary_types_allowed = True
 
 
 class TagCreate(BaseModel):
@@ -92,4 +112,5 @@ class Tag(TagCreate):
     forms: List[Form] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        arbitrary_types_allowed = True

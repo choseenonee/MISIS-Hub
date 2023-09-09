@@ -3,6 +3,8 @@ from sqlalchemy import create_engine
 import psycopg2
 from psycopg2 import sql
 
+from CRUD import create_user
+
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:asdfghj@localhost:5433/postgres"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -91,6 +93,17 @@ def test():
     print(tag.clubs)  # Выводит клубы, связанные с тегом
 
 
+def test_a_function():
+    from models import User, Club, Event, Tag, Form, Base
+    from schemas import UserCreate
+    from datetime import datetime
+    SessionLocal = sessionmaker(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    session = SessionLocal()
+
+    return create_user(session, UserCreate(login='aboba', name='zalupa', surname='popa', password='123', random_coffee_active=True, last_random_coffee_meet=datetime.now(), random_coffee_days_delta=5))
+
 if __name__ == '__main__':
-    test()
+    # test()
+    test_a_function()
     # drop_all_tables()

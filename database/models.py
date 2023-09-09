@@ -17,6 +17,9 @@ class User(Base):
     name = Column(String)
     surname = Column(String)
     description = Column(Text, nullable=True)
+    random_coffee_active = Column(Boolean)
+    last_random_coffee_meet = Column(DateTime, nullable=True)
+    random_coffee_days_delta = Column(Integer)
     dormitory = Column(String, nullable=True)
 
     form_responders = relationship("User", secondary=association_user_form, foreign_keys=[association_user_form.c.owner_id])
