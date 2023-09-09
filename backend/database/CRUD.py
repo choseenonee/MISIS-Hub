@@ -3,6 +3,7 @@ from fastapi import HTTPException
 
 from . import models
 from . import schemas
+from ..gpt_tag_validation import validate_tag
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -50,6 +51,7 @@ def add_user_telegram(db: Session, data: schemas.AddUserTelegram):
 def create_form(db: Session, form: schemas.FormCreate):
     form_base = schemas.FormBase(**dict(form))
     db_form = models.Form(**dict(form_base))
+
     db_form.tags = [[get_tag(tag) for tag in form.tags]]
 
     try:
@@ -65,6 +67,17 @@ def create_form(db: Session, form: schemas.FormCreate):
 
 def get_all_forms(db: Session):
     return db.query(models.Form).all()
+
+
+def create_tag(db: Session, tag: schemas.TagCreate):
+    db_tag = models.Tag(**dict(tag))
+    try:
+        db.add(db_tag)
+        db.commit()
+        db.refresh(db_tag)
+        return '200'
+    except Exception as e:
+        raise HTTPException(status_code=500, detail='error while adding tag to DB')
 
 
 def get_tag(db: Session, tag: str):

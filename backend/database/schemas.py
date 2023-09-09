@@ -107,7 +107,6 @@ class Form(FormCreate):
 
 class TagCreate(BaseModel):
     tag: str
-    is_hard: bool
 
 
 class Tag(TagCreate):

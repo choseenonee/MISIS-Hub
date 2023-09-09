@@ -70,7 +70,6 @@ class Tag(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tag = Column(String, unique=True)
-    is_hard = Column(Boolean, index=True)
 
     clubs = relationship("Club", secondary=association_club_tags, back_populates="tags")
     events = relationship("Event", secondary=association_event_tags, back_populates="tags")
