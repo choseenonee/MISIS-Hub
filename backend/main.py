@@ -14,13 +14,16 @@ from . import gpt
 
 app = FastAPI()
 
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=origins,
     allow_credentials=True,
-    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 dotenv_relative_path = '.env'
 dotenv_path = os.path.abspath(dotenv_relative_path)
