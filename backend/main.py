@@ -28,7 +28,7 @@ app.add_middleware(
 dotenv_relative_path = '.env'
 dotenv_path = os.path.abspath(dotenv_relative_path)
 load_dotenv(dotenv_path)
-predefined_tags = os.getenv('PREDEFINED_TAGS').split(' ')
+predefined_tags_raw = os.getenv('PREDEFINED_TAGS').split(' ')
 
 app.include_router(router)
 
@@ -45,7 +45,15 @@ def get_db():
 
 @app.on_event("startup")
 async def initialize_tags():
-    global predefined_tags
+    global predefined_tags_raw
+
+    predefined_tags = []
+
+    for i in range(len(predefined_tags_raw)-1):
+        if predefined_tags_raw[i][0].isupper() and predefined_tags_raw[i+1][0].isupper():
+            predefined_tags.append(predefined_tags_raw[i])
+        elif predefined_tags_raw[i][0].isupper() and predefined_tags_raw[i+1][0].islower():
+            predefined_tags.append(predefined_tags_raw[i] + ' ' + predefined_tags_raw[i+1])
 
     db = SessionLocal()
     if len(CRUD.get_all_tags(db)) == 0:
