@@ -3,10 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import uvicorn
 
-from database.router import router
-from database import models, schemas, CRUD
-from database.db import engine, SessionLocal
-from match_random_coffee import match_users
+from .database.router import router
+from .database import models, schemas, CRUD
+from .database.db import engine, SessionLocal
+from .match_random_coffee import match_users
 
 app = FastAPI()
 

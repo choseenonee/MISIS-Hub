@@ -105,6 +105,6 @@ def test_a_function():
 
 
 if __name__ == '__main__':
-    # test()
+    test()
     # test_a_function()
-    drop_all_tables()
+    # drop_all_tables()

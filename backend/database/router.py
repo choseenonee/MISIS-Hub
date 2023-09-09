@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from . import CRUD
 from . import models
 from . import schemas
-from database.db import engine, SessionLocal
-from authorization.hash import get_password_hash, compare_password
+from .db import engine, SessionLocal
+from ..authorization.hash import get_password_hash, compare_password
 
 
 router = APIRouter(

@@ -2,8 +2,8 @@ from sqlalchemy import Column, ForeignKey, Boolean, Integer, String, Text, DateT
 from sqlalchemy.orm import relationship
 
 
-from database.db import Base
-from database.association_tables import association_user_clubs, association_form_tags, association_user_form, association_events_organizers, association_user_tags, association_event_tags, association_club_tags
+from .db import Base
+from .association_tables import association_user_clubs, association_form_tags, association_user_form, association_events_organizers, association_user_tags, association_event_tags, association_club_tags
 
 
 class User(Base):

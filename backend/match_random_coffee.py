@@ -1,7 +1,5 @@
 from datetime import datetime, timedelta
 
-from database.CRUD import get_all_users
-
 
 def filter_users(users: list):
     filtered_users = []
