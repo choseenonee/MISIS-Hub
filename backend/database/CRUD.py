@@ -3,7 +3,7 @@ from fastapi import HTTPException
 
 from . import models
 from . import schemas
-from ..gpt_tag_validation import validate_tag
+from ..gpt import validate_tag
 
 
 def create_user(db: Session, user: schemas.UserCreate):
