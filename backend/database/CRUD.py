@@ -38,7 +38,7 @@ def get_all_users(db: Session):
     return db.query(models.User).all()
 
 
-def add_user_telegram(db: Session, data: schemas.AddUserTelegram):
+def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
     user = get_user(db, schemas.GetUserFromDB(**dict(data)))
     user.telegram = data.telegram
     try:

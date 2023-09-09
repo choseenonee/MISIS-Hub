@@ -14,7 +14,6 @@ class UserBase(BaseModel):
     description: str | None = None
     dormitory: str | None = None
     random_coffee_active: bool
-    random_coffee_days_delta: int
 
 
 class GetUserFromDB(BaseModel):
@@ -23,8 +22,9 @@ class GetUserFromDB(BaseModel):
     phone_number: str | None = None
 
 
-class AddUserTelegram(GetUserFromDB):
+class AddUserRandomCoffeeConfig(GetUserFromDB):
     telegram: str
+    random_coffee_days_delta: int
 
 
 class UserCreate(UserBase):
