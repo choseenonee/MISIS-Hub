@@ -43,3 +43,8 @@ def get_user(data: schemas.GetUserFromDB, db: Session = Depends(get_db)):
 @router.put("/add_user_tg")
 def add_user_tg(data: schemas.AddUserRandomCoffeeConfig, db: Session = Depends(get_db)):
     return CRUD.add_user_telegram(db, data=data)
+
+
+@router.get("/get_all_tags")
+def get_all_tags(db: Session = Depends(get_db)):
+    return CRUD.get_all_tags(db)

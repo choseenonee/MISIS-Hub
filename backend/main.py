@@ -16,6 +16,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
+    allow_credentials=True,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,11 +46,12 @@ async def initialize_tags():
     global predefined_tags
 
     db = SessionLocal()
-    for tag_name in predefined_tags:
-        tag = models.Tag(tag=tag_name)
-        db.add(tag)
-    db.commit()
-    db.close()
+    if len(CRUD.get_all_tags(db)) == 0:
+        for tag_name in predefined_tags:
+            tag = models.Tag(tag=tag_name)
+            db.add(tag)
+        db.commit()
+        db.close()
 
 
 @app.get("/get_matches", tags=['logic'])
