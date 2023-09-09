@@ -31,7 +31,7 @@ def get_db():
         db.close()
 
 
-@app.get("/get_matches")
+@app.get("/get_matches", tags=['logic'])
 def get_matches(db: Session = Depends(get_db)):
     all_users = CRUD.get_all_users(db)
     matched_users = match_users(all_users)
@@ -39,4 +39,4 @@ def get_matches(db: Session = Depends(get_db)):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app)
