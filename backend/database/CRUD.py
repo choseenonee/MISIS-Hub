@@ -11,7 +11,7 @@ def create_user(db: Session, user: schemas.UserCreate):
                           hashed_password=user.password, name=user.name, surname=user.surname,
                           description=user.description, dormitory=user.dormitory,
                           random_coffee_active=user.random_coffee_active)
-
+    db_user.tags = [get_tag(db, tag) for tag in user.tags]
     try:
         db.add(db_user)
         db.commit()
@@ -28,7 +28,7 @@ def get_user(db: Session, data: schemas.GetUserFromDB):
     elif data.email:
         return db.query(models.User).filter(models.User.email == data.email).first()
     elif data.phone_number:
-        return db.query(models.User).filter(models.User )
+        return db.query(models.User).filter(models.User)
     else:
         raise HTTPException(status_code=404, detail='user not found')
 

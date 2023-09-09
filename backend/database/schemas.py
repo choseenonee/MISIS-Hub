@@ -30,6 +30,8 @@ class AddUserRandomCoffeeConfig(GetUserFromDB):
 class UserCreate(UserBase):
     password: str
 
+    tags: List[str] = []
+
 
 class UserInDB(UserBase):
     hashed_password: str
