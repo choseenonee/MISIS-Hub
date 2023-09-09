@@ -1,19 +1,17 @@
-import React from 'react';
-import styles from './Header.module.scss';
+import styles from './Header.module.css';
 export default function Header() {
   return (
     <>
       <header className={styles.main}>
-        <div className={styles.logo}>
+        <div>
           <svg
-            width="339"
-            height="152"
+            width="233"
+            height="104"
             viewBox="0 0 339 152"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink">
             <g clipPath="url(#clip0_3_5)">
-              <rect width="339" height="152" rx="2" fill="#404040" />
               <rect y="-1" width="340" height="154" fill="white" />
               <rect x="17" y="13" width="126" height="126" fill="url(#pattern0)" />
               <path
