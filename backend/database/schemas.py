@@ -18,6 +18,7 @@ class GetUserFromDB(BaseModel):
     login: str | None = None
     email: str | None = None
     phone_number: str | None = None
+    password: str
 
 
 class AddUserRandomCoffeeConfig(GetUserFromDB):

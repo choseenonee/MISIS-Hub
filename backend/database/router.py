@@ -31,7 +31,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return CRUD.create_user(db, user)
 
 
-@router.get("/get_user", response_model=schemas.User)
+@router.post("/get_user", response_model=schemas.User)
 def get_user(data: schemas.GetUserFromDB, db: Session = Depends(get_db)):
     user = CRUD.get_user(db, data)
     if user.hashed_password == hash(data.password):
