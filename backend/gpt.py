@@ -5,6 +5,13 @@ import openai
 from dotenv import load_dotenv
 
 
+<<<<<<< Updated upstream
+=======
+dotenv_relative_path = './.env'
+dotenv_path = os.path.abspath(dotenv_relative_path)
+load_dotenv(dotenv_path=dotenv_path)
+print(dotenv_path)
+>>>>>>> Stashed changes
 openai.api_key = os.getenv('GPT_API_KEY')
 
 
