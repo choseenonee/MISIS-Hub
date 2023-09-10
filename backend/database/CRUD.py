@@ -29,7 +29,9 @@ def get_user(db: Session, data: schemas.GetUserFromDB):
     elif data.email:
         return db.query(models.User).filter(models.User.email == data.email).first()
     elif data.phone_number:
-        return db.query(models.User).filter(models.User)
+        return db.query(models.User).filter(models.User.phone_number == data.phone_number).first()
+    elif data.telegram:
+        return db.query(models.User).filter(models.User.telegram == data.telegram).first()
     else:
         raise HTTPException(status_code=404, detail='user not found')
 

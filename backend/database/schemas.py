@@ -18,6 +18,7 @@ class GetUserFromDB(BaseModel):
     login: str | None = None
     email: str | None = None
     phone_number: str | None = None
+    telegram: str | None = None
     password: str
 
 
@@ -29,11 +30,11 @@ class AddUserRandomCoffeeConfig(GetUserFromDB):
 class UserCreate(UserBase):
     password: str
 
-    tags: List[str] = []
+    tags: List['Tag'] = []
 
 
 class UserFrontend(UserBase):
-    tags: List[str] = []
+    tags: List['Tag'] = []
 
 
 class UserInDB(UserBase):
@@ -48,7 +49,7 @@ class User(UserBase):
     form_responders: List['User'] = []
     clubs: List['Club'] = []
     events: List['Event'] = []
-    tags: List[str] = []
+    tags: List['Tag'] = []
 
     class Config:
         from_attributes = True
@@ -65,7 +66,7 @@ class Club(ClubCreate):
 
     members: List[User] = []
     events: List['Event'] = []
-    tags: List[str] = []
+    tags: List['Tag'] = []
 
     class Config:
         from_attributes = True
@@ -84,7 +85,7 @@ class Event(EventCreate):
 
     club_organizer: Union[Club, None] = None
     user_organizer: Union[User, None] = None
-    tags: List[str] = []
+    tags: List['Tag'] = []
 
     class Config:
         from_attributes = True
@@ -97,7 +98,7 @@ class FormBase(BaseModel):
 
 
 class FormCreate(FormBase):
-    tags: List[str] = []
+    tags: List['Tag'] = []
 
 
 class Form(FormCreate):
