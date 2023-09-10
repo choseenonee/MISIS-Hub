@@ -5,10 +5,6 @@ import openai
 from dotenv import load_dotenv
 
 
-dotenv_relative_path = '../.env'
-dotenv_path = os.path.abspath(dotenv_relative_path)
-load_dotenv(dotenv_path=dotenv_path)
-
 openai.api_key = os.getenv('GPT_API_KEY')
 
 
@@ -16,7 +12,7 @@ def send_prompt(prompt):
     response = openai.Completion.create(
         engine='text-davinci-003',
         prompt=prompt,
-        temperature=1,
+        temperature=0.5,
         max_tokens=1300,
         n=1,
         stop=None
@@ -26,13 +22,16 @@ def send_prompt(prompt):
 
 
 def validate_tag(tag: str) -> bool:
-    prompt = f'''Ответь да, если {tag} может быть тегом в анкете для знакомств, или нет. Под тэгом я имею ввиду hard, soft skills, а так же чьи-то интересы, хобби, предпочтения. Отвечай только да или нет.'''
+    if 0 < len(tag.split(' ')) < 3 and tag[0].isupper():
+        prompt = f'''Ответь да, если {tag} может быть тегом или нет. Под тэгом я имею ввиду hard, soft skills, а так же чьи-то интересы, хобби, предпочтения, занятия, мировоззрение, вкусы. Отвечай только да или нет.'''
 
-    answer = send_prompt(prompt)
+        answer = send_prompt(prompt)
 
-    answer = answer.lower()
-    if 'yes' in answer or 'да' in answer.lower():
-        return True
+        answer = answer.lower()
+        if 'yes' in answer or 'да' in answer.lower():
+            return True
+        else:
+            return False
     else:
         return False
 
@@ -52,3 +51,11 @@ def get_questions():
     answer = send_prompt(base_prompt)
     answer = answer[answer.find('IT')::]
     return answer
+
+
+if __name__ == '__main__':
+    dotenv_relative_path = '../.env'
+    dotenv_path = os.path.abspath(dotenv_relative_path)
+    load_dotenv(dotenv_path=dotenv_path)
+
+    print(validate_tag('Еда'))
