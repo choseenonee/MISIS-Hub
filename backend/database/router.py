@@ -55,12 +55,12 @@ def get_user_for_tg(data: schemas.GetUserForTg, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail='not found')
 
 
-@router.put("/add_user_tg")
+@router.post("/add_user_tg")
 def add_user_tg(data: schemas.AddUserRandomCoffeeConfig, db: Session = Depends(get_db)):
     return CRUD.add_user_telegram(db, data=data)
 
 
-@router.put("/update_user_random_coffee")
+@router.post("/update_user_random_coffee")
 def update_user_random_coffee(data: schemas.UpdateUserRC, db: Session = Depends(get_db)):
     if CRUD.update_user_random_coffee(db, data):
         return JSONResponse(status_code=200)
