@@ -12,10 +12,7 @@ logging.basicConfig(level=logging.INFO)
 
 # заготовленные ответы
 main_text = '1. Включить Random Coffee\n2. Выключить Random Coffee'
-back_text = 'Вернутся назад'
-
-def show_profile(name, dormitory, description):
-    return f'{name}\n{dormitory}\n{description}'
+back_text = 'Вернуться назад'
 
 class Datas():
     logins = []
@@ -33,12 +30,18 @@ class Wait(StatesGroup):
 async def anketa_start(message: types.Message):
     # Сделать проверку по tg id
     # Если нет id в бд, то авторизовать по email / login. Иначе зарегистрироваться
-    r = requests.get('http://127.0.0.1:8000/database/get_all_users').json()
-    for i in r:
-        Datas.logins.append(i['login'])
-        Datas.tgids.append(i['telegram'])
-    user_id = message.from_user.id
-    if user_id in Datas.tgids:
+    # r = requests.get('http://127.0.0.1:8000/database/get_all_users').json()
+    # for i in r:
+    #     Datas.logins.append(i['login'])
+    #     Datas.tgids.append(i['telegram'])
+
+    username = message.from_user.username
+    datas = {
+        'telegram': username
+    }
+    # if username in Datas.tgids:
+    r = requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).text
+    if r != '{"detail":"Not Found"}':
         message.answer('Добро пожаловать в MISIS Hub')
 
     else:
@@ -48,14 +51,40 @@ async def anketa_start(message: types.Message):
 
 @dp.message_handler(state = Wait.login)
 async def enter_login(message: types.Message, state: FSMContext):
-        
-    if Wait.login in Datas.logins:
+    datas = {
+        'telegram': message.text
+    }
+    r = requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).text
+    if r != '{"detail":"Not Found"}':
         message.answer('Вы успешно авторизовались')
+        await state.update_data(login = message.text)
+        if requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).json()['random_coffee_active'] == True:
+            message.answer('Напишите с какой частотой(раз во сколько дней) ты хочешь получать Random Coffee\nОтправь только число')
+            await Wait.random_coffee_days_delta.set()
+        else:
+            keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            buttons = ["Да", "Нет"]
+            keyboard.add(*buttons)
+            message.answer('Ты хочешь включить функцию Random Coffee?', reply_markup = keyboard)
+            await Wait.random_coffee.set()
+    else:
+        message.answer('Такого пользователя не существует')
+        return
+
+@dp.message_handler(state = Wait.random_coffee)
+async def text(message: types.Message, state: FSMContext):
+    if message.text == 'Да':
         await state.update_data(login = message.text.lower())
         message.answer('Напишите с какой частотой(раз во сколько дней) ты хочешь получать Random Coffee\nОтправь только число')
         await Wait.random_coffee_days_delta.set()
+
+    elif message.text == 'Нет':
+        message.answer('До встречи!')
+        await state.update_data(login = message.text.lower())
+        return
+    
     else:
-        message.answer('Такого пользователя не существует')
+        message.answer('Выбери из предложенных вариантов')
         return
 
 @dp.message_handler(state = Wait.random_coffee_days_delta)
@@ -86,7 +115,14 @@ async def text(message: types.Message, state: FSMContext):
 @dp.message_handler(state = Wait.menu_answer)
 async def menu_answer(message: types.Message, state: FSMContext):
     if message.text == "1":
-        pass
+        datas = {
+            'telegram': message.from_user.username
+        }
+        if requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).json()['random_coffee_active'] == True:
+            message.answer('У тебя уже включена данная функция')
+            return
+        else:
+            await enter_login()
     elif message.text == '2':
         pass
     else:
