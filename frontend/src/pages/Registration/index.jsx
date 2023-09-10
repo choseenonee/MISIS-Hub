@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Registration.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/slices/userSlice';
 
 export default function Registration() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [about, setAbout] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [dormitory, setDormitory] = useState('');
+  const [dormitory, setDormitory] = useState('Металлург-1');
   const [coffee, setCoffee] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [tags, setTags] = useState([]);
@@ -282,7 +286,11 @@ export default function Registration() {
                             name={elem.tag}
                             type="checkbox"
                             onChange={(e) =>
-                              setFinalTags([...finalTags, e.target.checked && e.target.name])
+                              e.target.checked
+                                ? setFinalTags([...finalTags, e.target.name])
+                                : setFinalTags([
+                                    ...finalTags.filter((elem) => elem !== e.target.name),
+                                  ])
                             }
                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
@@ -384,18 +392,6 @@ export default function Registration() {
           <button
             onClick={(e) => {
               e.preventDefault();
-              console.log({
-                login: login,
-                name: firstName,
-                surname: lastName,
-                phone_number: phoneNumber,
-                email: email,
-                description: about,
-                dormitory: dormitory,
-                random_coffee_active: coffee,
-                password: password,
-                tags: [...finalTags],
-              });
               axios
                 .post('http://127.0.0.1:8000/database/create_user', {
                   login: login,
@@ -409,7 +405,12 @@ export default function Registration() {
                   password: password,
                   tags: [...finalTags],
                 })
-                .then((responce) => console.log(responce));
+                .then((response) => {
+                  if (response.status === 200) {
+                    dispatch(setUser(response.data));
+                    navigate('/');
+                  }
+                });
             }}
             className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Зарегестрироваться
