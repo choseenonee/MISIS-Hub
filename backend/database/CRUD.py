@@ -60,7 +60,7 @@ def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
         db.commit()
         return '200'
     except Exception as e:
-        raise HTTPException(status_code=500, detail='error while commiting db on adding telegram')
+        raise HTTPException(status_code=501, detail='error while commiting db on adding telegram')
 
 
 def update_user_random_coffee(db: Session, data: schemas.UpdateUserRC):
