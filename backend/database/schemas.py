@@ -38,7 +38,7 @@ class AddUserRandomCoffeeConfig(GetUserFromDB):
 class UserCreate(UserBase):
     password: str
 
-    tags: list
+    tags: List[str] = []
 
 
 class UserFrontend(UserBase):
