@@ -32,8 +32,8 @@ def get_user(db: Session, data: schemas.GetUserFromDB):
         db_user = db.query(models.User).filter(models.User.phone_number == data.phone_number).first()
     elif data.telegram:
         db_user = db.query(models.User).filter(models.User.telegram == data.telegram).first()
-    else:
-        raise HTTPException(status_code=404, detail='user not found')
+    if db_user is None:
+        raise HTTPException(status_code=404)
     tag_list = []
     if db_user.tags is not None:
         if len(db_user.tags) > 0:
