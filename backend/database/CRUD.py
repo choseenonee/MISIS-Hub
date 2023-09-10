@@ -53,7 +53,6 @@ def get_all_users(db: Session):
 
 
 def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
-    # user = get_user(db, schemas.GetUserFromDB(login=data.login, email=data.email, phone_number=data.phone_number))
     if data.login:
         db_user = db.query(models.User).filter(models.User.login == data.login).first()
     elif data.email:
@@ -63,6 +62,7 @@ def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
     else:
         raise HTTPException(status_code=400, detail='no data provided')
     db_user.telegram = data.telegram
+    db_user.telegram_id = data.telegram_id
     db_user.random_coffee_days_delta = data.random_coffee_days_delta
     try:
         db.commit()

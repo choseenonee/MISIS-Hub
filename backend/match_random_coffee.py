@@ -5,7 +5,8 @@ def filter_users(users: list):
     filtered_users = []
     for user in users:
         if user.random_coffee_active:
-            if user.last_random_coffee_meet + timedelta(days=user.random_coffee_days_delta) <= datetime.now():
+            if user.random_coffee_days_delta is not None:
+                # if user.last_random_coffee_meet + timedelta(days=user.random_coffee_days_delta) <= datetime.now():
                 filtered_users.append(user)
     return filtered_users
 
