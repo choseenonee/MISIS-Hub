@@ -75,12 +75,16 @@ def update_user_random_coffee(db: Session, data: schemas.UpdateUserRC):
     return '200'
 
 
-
 def create_form(db: Session, form: schemas.FormCreate):
-    form_base = schemas.FormBase(**dict(form))
-    db_form = models.Form(**dict(form_base))
+    if len(form.tags) > 0:
+        db_tags = [get_tag(db, tag) for tag in form.tags]
+    else:
+        db_tags = []
 
-    db_form.tags = [[get_tag(tag) for tag in form.tags]]
+    author_id = get_user(db, schemas.GetUserFromDB(login=form.author_login)).id
+
+    db_form = models.Form(author_id=author_id, author_login=form.author_login, form_type=form.form_type,
+                          description=form.description, tags=db_tags)
 
     try:
         db.add(db_form)
@@ -90,11 +94,22 @@ def create_form(db: Session, form: schemas.FormCreate):
         print(e)
         raise HTTPException(status_code=500, detail='error while creating form')
 
-    return db_form
+    form = schemas.Form(id=db_form.id, author_id=db_form.author_id, author_login=db_form.author_login,
+                        description=db_form.description, form_type=db_form.form_type,
+                        tags=[tag.tag for tag in db_form.tags])
+    return form
 
 
 def get_all_forms(db: Session):
-    return db.query(models.Form).all()
+    all_forms = db.query(models.Form).all()
+    return_forms = []
+    for form in all_forms:
+        tags = [tag.tag for tag in form.tags]
+        user = get_user(db, schemas.GetUserFromDB(login=form.author_login))
+        return_forms.append(schemas.FormReturn(author_login=form.author_login, description=form.description,
+                                               form_type=form.form_type, id=form.id, author_id=form.author_id,
+                                               tags=tags, author=user))
+    return return_forms
 
 
 def create_tag(db: Session, tag: schemas.TagCreate):
@@ -109,10 +124,10 @@ def create_tag(db: Session, tag: schemas.TagCreate):
 
 
 def get_tag(db: Session, tag: str):
-    for db_tag in db.query(models.Tag).all():
-        if db_tag.tag.lower().replace(' ', '') == tag.lower().replace(' ', ''):
-            return db_tag
-    # return db.query(models.Tag).filter(models.Tag.tag == tag).first()
+    # for db_tag in db.query(models.Tag).all():
+    #     if db_tag.tag.lower().replace(' ', '') == tag.lower().replace(' ', ''):
+    #         return db_tag[0]
+    return db.query(models.Tag).filter(models.Tag.tag == tag).first()
 
 
 def get_all_tags(db: Session):

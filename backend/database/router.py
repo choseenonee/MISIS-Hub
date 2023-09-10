@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -72,3 +74,13 @@ def get_all_tags(db: Session = Depends(get_db)):
 @router.get('/get_all_users')
 def get_all_users(db: Session = Depends(get_db)):
     return CRUD.get_all_users(db)
+
+
+@router.post("/create_form", response_model=schemas.Form)
+def create_form(form: schemas.FormCreate, db: Session = Depends(get_db)):
+    return CRUD.create_form(db, form)
+
+
+@router.get("/get_all_forms", response_model=List[schemas.FormReturn])
+def get_all_forms(db: Session = Depends(get_db)):
+    return CRUD.get_all_forms(db)
