@@ -41,7 +41,7 @@ def get_user(db: Session, data: schemas.GetUserFromDB):
                             tags=tag_list, telegram=db_user.telegram, clubs=db_user.clubs,
                             last_random_coffee_meet=db_user.last_random_coffee_meet,
                             form_responders=db_user.form_responders, events=db_user.events,
-                            hashed_password=db_user.hashed_password)
+                            hashed_password=db_user.hashed_password, random_coffee_days_delta=db_user.random_coffee_days_delta)
     return user
 
 

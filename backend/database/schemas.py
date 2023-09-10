@@ -14,11 +14,19 @@ class UserBase(BaseModel):
     random_coffee_active: bool
 
 
+class GetUserForTg(BaseModel):
+    telegram: str | None = None
+    login: str | None = None
+
+
 class GetUserFromDB(BaseModel):
     login: str | None = None
     email: str | None = None
     phone_number: str | None = None
     telegram: str | None = None
+
+
+class AuthUser(GetUserFromDB):
     password: str
 
 
@@ -41,11 +49,12 @@ class User(UserBase):
     id: int
     telegram: str | None = None
     last_random_coffee_meet: datetime | None = None
+    random_coffee_days_delta: int | None = None
 
-    form_responders: list
-    clubs: list
-    events: list
-    tags: list
+    form_responders: List[str] = []
+    clubs: List[str] = []
+    events: List[str] = []
+    tags: List[str] = []
 
     class Config:
         from_attributes = True
@@ -116,10 +125,10 @@ class TagCreate(BaseModel):
 class Tag(TagCreate):
     id: int
 
-    clubs: list
-    events: list
-    users: list
-    forms: list
+    clubs: List[str] = []
+    events: List[str] = []
+    users: List[str] = []
+    forms: List[str] = []
 
     class Config:
         from_attributes = True
