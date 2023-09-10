@@ -9,7 +9,13 @@ const initialState = {
     description: null,
     dormitory: null,
     random_coffee_active: null,
-    tags: null
+    tags: null,
+    telegram: null,
+    clubs: null,
+    events: null,
+    last_random_coffee_meet: null,
+    id: null,
+    form_responders: null
 };
 
 const userSlice = createSlice({
@@ -26,6 +32,12 @@ const userSlice = createSlice({
       state.dormitory = action.payload.dormitory;
       state.random_coffee_active = action.payload.random_coffee_active;
       state.tags = action.payload.tags;
+      action.payload.telegram ? state.telegram = action.payload.telegram : null
+      action.payload.clubs ? state.clubs = action.payload.clubs : null
+      action.payload.events ? state.events = action.payload.events : null
+      action.payload.last_random_coffee_meet ? state.last_random_coffee_meet = action.payload.last_random_coffee_meet : null
+      action.payload.id ? state.id = action.payload.id : null
+      action.payload.form_responders ? state.form_responders = action.payload.form_responders : null
     },
   }
 })
