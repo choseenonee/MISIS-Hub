@@ -25,7 +25,7 @@ def get_db():
         db.close()
 
 
-@router.post("/create_user", response_model=schemas.User)
+@router.post("/create_user", response_model=schemas.UserFrontend)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     user.password = get_password_hash(user.password)
     return CRUD.create_user(db, user)

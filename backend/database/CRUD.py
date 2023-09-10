@@ -19,7 +19,8 @@ def create_user(db: Session, user: schemas.UserCreate):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail='error while creating user')
-    return db_user
+    user_frontend = schemas.UserFrontend(**dict(user))
+    return user_frontend
 
 
 def get_user(db: Session, data: schemas.GetUserFromDB):
@@ -40,6 +41,7 @@ def get_all_users(db: Session):
 def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
     user = get_user(db, schemas.GetUserFromDB(**dict(data)))
     user.telegram = data.telegram
+    user.random_coffee_days_delta = data.random_coffee_days_delta
     try:
         db.commit()
         return '200'
@@ -80,7 +82,10 @@ def create_tag(db: Session, tag: schemas.TagCreate):
 
 
 def get_tag(db: Session, tag: str):
-    return db.query(models.Tag).filter(models.Tag.tag == tag).first()
+    for db_tag in db.query(models.Tag).all():
+        if db_tag.tag.lower().replace(' ', '') == tag.lower().replace(' ', ''):
+            return db_tag
+    # return db.query(models.Tag).filter(models.Tag.tag == tag).first()
 
 
 def get_all_tags(db: Session):

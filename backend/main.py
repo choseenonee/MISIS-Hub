@@ -27,6 +27,7 @@ app.add_middleware(
 
 dotenv_relative_path = '.env'
 dotenv_path = os.path.abspath(dotenv_relative_path)
+
 load_dotenv(dotenv_path)
 predefined_tags_raw = os.getenv('PREDEFINED_TAGS').split(' ')
 
@@ -79,10 +80,13 @@ def get_questions():
 
 @app.post("/create_tag", tags=['logic'])
 def create_tag(tag: schemas.TagCreate, db: Session = Depends(get_db)):
-    if gpt.validate_tag(tag.tag):
-        CRUD.create_tag(db, tag)
+    if CRUD.get_tag(db, tag.tag) is None:
+        if gpt.validate_tag(tag.tag):
+            CRUD.create_tag(db, tag)
+        else:
+            raise HTTPException(status_code=403, detail='tag didnt passed validation')
     else:
-        raise HTTPException(status_code=403, detail='tag didnt passed validation')
+        raise HTTPException(status_code=404, detail="tag that you are trying to add already in database")
 
 
 if __name__ == "__main__":
