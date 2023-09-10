@@ -44,9 +44,13 @@ def get_user(data: schemas.AuthUser, db: Session = Depends(get_db)):
 @router.post("/get_user_for_tg")
 def get_user_for_tg(data: schemas.GetUserForTg, db: Session = Depends(get_db)):
     if data.telegram:
-        return CRUD.get_user(db, schemas.GetUserFromDB(telegram=data.telegram)).login
+        db_user = CRUD.get_user(db, schemas.GetUserFromDB(telegram=data.telegram))
     elif data.login:
-        return CRUD.get_user(db, schemas.GetUserFromDB(login=data.login)).telegram
+        db_user = CRUD.get_user(db, schemas.GetUserFromDB(login=data.login))
+    try:
+        return db_user
+    except:
+        raise HTTPException(status_code=404, detail='not found')
 
 
 @router.put("/add_user_tg")
