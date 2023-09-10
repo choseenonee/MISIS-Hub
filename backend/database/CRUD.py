@@ -63,6 +63,19 @@ def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
         raise HTTPException(status_code=500, detail='error while commiting db on adding telegram')
 
 
+def update_user_random_coffee(db: Session, data: schemas.UpdateUserRC):
+    db_user = get_user(db, schemas.GetUserFromDB(telegram=data.telegram))
+    if data.random_coffee_days_delta:
+        db_user.random_coffee_days_delta = data.random_coffee_days_delta
+    if data.random_coffee_active:
+        db_user.random_coffee_active = data.random_coffee_active
+    if data.last_random_coffee_meet:
+        db_user.last_random_coffee_meet = data.last_random_coffee_meet
+    db.commit()
+    return '200'
+
+
+
 def create_form(db: Session, form: schemas.FormCreate):
     form_base = schemas.FormBase(**dict(form))
     db_form = models.Form(**dict(form_base))

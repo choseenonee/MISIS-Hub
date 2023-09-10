@@ -41,6 +41,13 @@ class UserCreate(UserBase):
     tags: List[str] = []
 
 
+class UpdateUserRC(BaseModel):
+    telegram: str
+    random_coffee_active: bool
+    last_random_coffee_meet: datetime
+    random_coffee_days_delta: int
+
+
 class UserFrontend(UserBase):
     tags: list
 
