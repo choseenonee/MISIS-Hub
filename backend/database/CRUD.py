@@ -53,7 +53,7 @@ def get_all_users(db: Session):
 
 
 def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
-    user = get_user(db, schemas.GetUserFromDB(**dict(data)))
+    user = get_user(db, schemas.GetUserFromDB(login=data.login, email=data.email, phone_number=data.phone_number))
     user.telegram = data.telegram
     user.random_coffee_days_delta = data.random_coffee_days_delta
     try:
