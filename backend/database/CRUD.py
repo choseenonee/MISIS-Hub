@@ -40,6 +40,7 @@ def get_all_users(db: Session):
 def add_user_telegram(db: Session, data: schemas.AddUserRandomCoffeeConfig):
     user = get_user(db, schemas.GetUserFromDB(**dict(data)))
     user.telegram = data.telegram
+    user.random_coffee_days_delta = data.random_coffee_days_delta
     try:
         db.commit()
         return '200'
