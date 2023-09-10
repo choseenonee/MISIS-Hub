@@ -34,11 +34,10 @@ def get_user(db: Session, data: schemas.GetUserFromDB):
         db_user = db.query(models.User).filter(models.User.telegram == data.telegram).first()
     else:
         raise HTTPException(status_code=404, detail='user not found')
+    tag_list = []
     if db_user.tags is not None:
         if len(db_user.tags) > 0:
             tag_list = [tag.tag for tag in db_user.tags]
-    else:
-        tag_list = []
     user = schemas.UserInDB(id=db_user.id, login=db_user.login, name=db_user.name, surname=db_user.surname,
                             phone_number=db_user.phone_number, email=db_user.email, description=db_user.description,
                             dormitory=db_user.dormitory, random_coffee_active=db_user.random_coffee_active,
