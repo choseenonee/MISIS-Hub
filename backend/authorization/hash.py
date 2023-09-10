@@ -1,10 +1,10 @@
 import bcrypt
 
 
-def get_password_hash(password):
+def get_password_hash(password: str):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    return hashed_password
+    return hashed_password.decode()
 
 
-def compare_password(password, password_hash):
-    return bcrypt.checkpw(password.encode(), password_hash)
+def compare_password(password: str, hashed_password):
+    return bcrypt.checkpw(password.encode(), hashed_password.encode())
