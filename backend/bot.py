@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import requests
+import asyncio
 
 bot = Bot(token="6393800116:AAGYz3w5mo8jsxekDhAOAbmC4jPOUsuyWmc")
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -56,6 +57,7 @@ async def enter_login(message: types.Message, state: FSMContext):
     }
     r = requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).text
     if r != '{"detail":"Not Found"}':
+
         message.answer('Вы успешно авторизовались')
         await state.update_data(login = message.text)
         if requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).json()['random_coffee_active'] == True:
@@ -98,13 +100,18 @@ async def text(message: types.Message, state: FSMContext):
             return
     
     await state.update_data(random_coffee_days_delta = int(message.text))
-    
+    datas = {
+        "login": Wait.login,
+        "telegram": message.from_user.username,
+        "random_coffee_days_delta": int(message.text)
+    }
+    requests.put('http://127.0.0.1:8000/database/add_user_tg', json = datas)
     data = await state.get_data()
     d = list(data.values())
     print(d)
 
     await message.answer(f"Ты будешь получать Random Coffee раз в {int(message.text)} дней", chat_id = message.from_user.id)
-
+    r = requests.get('http://127.0.0.1:8000/get_matches')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons = ["1", "2"]
     keyboard.add(*buttons)
@@ -128,7 +135,7 @@ async def menu_answer(message: types.Message, state: FSMContext):
     else:
         message.answer('Выбери из предложенных вариантов')
         return
-        
+
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates=True)
