@@ -34,7 +34,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.post("/get_user", response_model=schemas.User)
 def get_user(data: schemas.GetUserFromDB, db: Session = Depends(get_db)):
     user = CRUD.get_user(db, data)
-    if user.hashed_password == hash(data.password):
+    if compare_password(data.password, user.hashed_password):
         return user
     else:
         raise HTTPException(status_code=403, detail="wrong password")
