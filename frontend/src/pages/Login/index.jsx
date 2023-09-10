@@ -3,6 +3,7 @@ import axios from 'axios';
 import styles from './Login.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/slices/userSlice';
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -74,12 +75,16 @@ export default function Login() {
             onClick={(e) => {
               e.preventDefault();
               axios
-                .get('http://127.0.0.1:8000/database/get_user', {
-                  data: {
-                    login: login,
-                  },
+                .post('http://127.0.0.1:8000/database/get_user', {
+                  login: login,
+                  password: password,
                 })
-                .then((response) => console.log(response.data));
+                .then((response) => {
+                  if (response.status === 200) {
+                    dispatch(setUser(response.data));
+                    navigate('/');
+                  }
+                });
             }}
             className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Вход

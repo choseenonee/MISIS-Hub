@@ -1,0 +1,6 @@
+.main {
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  height: 100%;
+  padding: 30px;
+  padding-left: 280px;
+}
