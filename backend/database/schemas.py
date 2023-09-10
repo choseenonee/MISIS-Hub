@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Union
 
@@ -30,15 +30,11 @@ class AddUserRandomCoffeeConfig(GetUserFromDB):
 class UserCreate(UserBase):
     password: str
 
-    tags: List['Tag'] = []
+    tags: list
 
 
 class UserFrontend(UserBase):
-    tags: List['Tag'] = []
-
-
-class UserInDB(UserBase):
-    hashed_password: str
+    tags: list
 
 
 class User(UserBase):
@@ -46,14 +42,18 @@ class User(UserBase):
     telegram: str | None = None
     last_random_coffee_meet: datetime | None = None
 
-    form_responders: List['User'] = []
-    clubs: List['Club'] = []
-    events: List['Event'] = []
-    tags: List['Tag'] = []
+    form_responders: list
+    clubs: list
+    events: list
+    tags: list
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
+
+class UserInDB(User):
+    hashed_password: str
 
 
 class ClubCreate(BaseModel):
@@ -116,10 +116,10 @@ class TagCreate(BaseModel):
 class Tag(TagCreate):
     id: int
 
-    clubs: List[Club] = []
-    events: List[Event] = []
-    users: List[User] = []
-    forms: List[Form] = []
+    clubs: list
+    events: list
+    users: list
+    forms: list
 
     class Config:
         from_attributes = True

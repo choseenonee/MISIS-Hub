@@ -25,15 +25,24 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def get_user(db: Session, data: schemas.GetUserFromDB):
     if data.login:
-        return db.query(models.User).filter(models.User.login == data.login).first()
+        db_user = db.query(models.User).filter(models.User.login == data.login).first()
     elif data.email:
-        return db.query(models.User).filter(models.User.email == data.email).first()
+        db_user = db.query(models.User).filter(models.User.email == data.email).first()
     elif data.phone_number:
-        return db.query(models.User).filter(models.User.phone_number == data.phone_number).first()
+        db_user = db.query(models.User).filter(models.User.phone_number == data.phone_number).first()
     elif data.telegram:
-        return db.query(models.User).filter(models.User.telegram == data.telegram).first()
+        db_user = db.query(models.User).filter(models.User.telegram == data.telegram).first()
     else:
         raise HTTPException(status_code=404, detail='user not found')
+    tag_list = [tag.tag for tag in db_user.tags]
+    user = schemas.UserInDB(id=db_user.id, login=db_user.login, name=db_user.name, surname=db_user.surname,
+                            phone_number=db_user.phone_number, email=db_user.email, description=db_user.description,
+                            dormitory=db_user.dormitory, random_coffee_active=db_user.random_coffee_active,
+                            tags=tag_list, telegram=db_user.telegram, clubs=db_user.clubs,
+                            last_random_coffee_meet=db_user.last_random_coffee_meet,
+                            form_responders=db_user.form_responders, events=db_user.events,
+                            hashed_password=db_user.hashed_password)
+    return user
 
 
 def get_all_users(db: Session):
