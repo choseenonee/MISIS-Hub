@@ -60,6 +60,8 @@ class Form(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     author_id = Column(Integer, ForeignKey("users.id"))
+    author_login = Column(String)
+    form_type = Column(String)
     description = Column(Text, index=True)
 
     tags = relationship("Tag", secondary=association_form_tags, back_populates="forms")

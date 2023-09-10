@@ -56,4 +56,4 @@ if __name__ == '__main__':
     dotenv_path = os.path.abspath(dotenv_relative_path)
     load_dotenv(dotenv_path=dotenv_path)
 
-    print(os.getenv('GPT_API_KEY'))
+    print(validate_tag('Музыка'))

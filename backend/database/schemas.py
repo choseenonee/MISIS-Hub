@@ -14,11 +14,19 @@ class UserBase(BaseModel):
     random_coffee_active: bool
 
 
+class GetUserForTg(BaseModel):
+    telegram: str | None = None
+    login: str | None = None
+
+
 class GetUserFromDB(BaseModel):
     login: str | None = None
     email: str | None = None
     phone_number: str | None = None
     telegram: str | None = None
+
+
+class AuthUser(GetUserFromDB):
     password: str
 
 
@@ -30,7 +38,14 @@ class AddUserRandomCoffeeConfig(GetUserFromDB):
 class UserCreate(UserBase):
     password: str
 
-    tags: list
+    tags: List[str] = []
+
+
+class UpdateUserRC(BaseModel):
+    telegram: str
+    random_coffee_active: bool | None = None
+    last_random_coffee_meet: datetime | None = None
+    random_coffee_days_delta: int | None = None
 
 
 class UserFrontend(UserBase):
@@ -41,11 +56,12 @@ class User(UserBase):
     id: int
     telegram: str | None = None
     last_random_coffee_meet: datetime | None = None
+    random_coffee_days_delta: int | None = None
 
-    form_responders: list
-    clubs: list
-    events: list
-    tags: list
+    form_responders: List[str] = []
+    clubs: List[str] = []
+    events: List[str] = []
+    tags: List[str] = []
 
     class Config:
         from_attributes = True
@@ -93,16 +109,26 @@ class Event(EventCreate):
 
 
 class FormBase(BaseModel):
-    author_id: int
+    author_login: str
     description: str
+    form_type: str
 
 
 class FormCreate(FormBase):
-    tags: List['Tag'] = []
+    tags: list = []
 
 
 class Form(FormCreate):
     id: int
+    author_id: int
+
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
+
+
+class FormReturn(Form):
+    author: User
 
     class Config:
         from_attributes = True
@@ -116,20 +142,11 @@ class TagCreate(BaseModel):
 class Tag(TagCreate):
     id: int
 
-    clubs: list
-    events: list
-    users: list
-    forms: list
+    clubs: List[str] = []
+    events: List[str] = []
+    users: List[str] = []
+    forms: List[str] = []
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
-
-
-# fixing the circular references problems
-User.model_rebuild()
-UserFrontend.model_rebuild()
-UserCreate.model_rebuild()
-Club.model_rebuild()
-Event.model_rebuild()
-FormCreate.model_rebuild()

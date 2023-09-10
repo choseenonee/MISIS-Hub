@@ -18,6 +18,8 @@ def match_users(users: list):
         for user_second in filtered_users:
             if user_main == user_second:
                 continue
+            if user_main in final_matches or user_second in final_matches:
+                break
             match = [user_main, user_second, set(user_main.tags) & set(user_second.tags)]
             matches.append(match)
         matches.sort(key=lambda x: len(x[2]))
