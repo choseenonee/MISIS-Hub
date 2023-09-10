@@ -124,3 +124,12 @@ class Tag(TagCreate):
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
+
+# fixing the circular references problems
+User.model_rebuild()
+UserFrontend.model_rebuild()
+UserCreate.model_rebuild()
+Club.model_rebuild()
+Event.model_rebuild()
+FormCreate.model_rebuild()
