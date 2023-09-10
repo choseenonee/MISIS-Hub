@@ -19,7 +19,8 @@ def create_user(db: Session, user: schemas.UserCreate):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail='error while creating user')
-    return db_user
+    user_frontend = schemas.UserFrontend(**dict(user))
+    return user_frontend
 
 
 def get_user(db: Session, data: schemas.GetUserFromDB):
@@ -81,7 +82,10 @@ def create_tag(db: Session, tag: schemas.TagCreate):
 
 
 def get_tag(db: Session, tag: str):
-    return db.query(models.Tag).filter(models.Tag.tag == tag).first()
+    for db_tag in db.query(models.Tag).all():
+        if db_tag.tag.lower().replace(' ', '') == tag.lower().replace(' ', ''):
+            return db_tag
+    # return db.query(models.Tag).filter(models.Tag.tag == tag).first()
 
 
 def get_all_tags(db: Session):

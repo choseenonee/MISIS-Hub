@@ -33,6 +33,10 @@ class UserCreate(UserBase):
     tags: List[str] = []
 
 
+class UserFrontend(UserBase):
+    tags: List[str] = []
+
+
 class UserInDB(UserBase):
     hashed_password: str
 
