@@ -2,8 +2,6 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Union
 
-from .models import *
-
 
 class UserBase(BaseModel):
     login: str
@@ -46,10 +44,10 @@ class User(UserBase):
     telegram: str | None = None
     last_random_coffee_meet: datetime | None = None
 
-    form_responders: List[User] = []
-    clubs: List[Club] = []
-    events: List[Event] = []
-    tags: List[Tag] = []
+    form_responders: List['User'] = []
+    clubs: List['Club'] = []
+    events: List['Event'] = []
+    tags: List[str] = []
 
     class Config:
         from_attributes = True
@@ -65,8 +63,8 @@ class Club(ClubCreate):
     id: int
 
     members: List[User] = []
-    events: List[Event] = []
-    tags: List[Tag] = []
+    events: List['Event'] = []
+    tags: List[str] = []
 
     class Config:
         from_attributes = True
@@ -85,7 +83,7 @@ class Event(EventCreate):
 
     club_organizer: Union[Club, None] = None
     user_organizer: Union[User, None] = None
-    tags: List[Tag] = []
+    tags: List[str] = []
 
     class Config:
         from_attributes = True
@@ -103,8 +101,6 @@ class FormCreate(FormBase):
 
 class Form(FormCreate):
     id: int
-
-    tags: List[Tag] = []
 
     class Config:
         from_attributes = True

@@ -4,8 +4,9 @@ from datetime import datetime, timedelta
 def filter_users(users: list):
     filtered_users = []
     for user in users:
-        if user.random_coffee_active and user.last_random_coffee_meet + timedelta(days=user.random_coffee_days_delta) <= datetime.now():
-            filtered_users.append(user)
+        if user.random_coffee_active:
+            if user.last_random_coffee_meet + timedelta(days=user.random_coffee_days_delta) <= datetime.now():
+                filtered_users.append(user)
     return filtered_users
 
 

@@ -1,6 +1,7 @@
 import os
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import uvicorn
@@ -83,6 +84,7 @@ def create_tag(tag: schemas.TagCreate, db: Session = Depends(get_db)):
     if CRUD.get_tag(db, tag.tag) is None:
         if gpt.validate_tag(tag.tag):
             CRUD.create_tag(db, tag)
+            return JSONResponse(status_code=200, content={"message": "Success"})
         else:
             raise HTTPException(status_code=403, detail='tag didnt passed validation')
     else:
