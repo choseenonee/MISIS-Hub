@@ -1,5 +1,6 @@
 import styles from './Header.module.css';
 import logo from '../../assets/misishub2.png';
+import { Link } from 'react-router-dom';
 export default function Header() {
   return (
     <>
@@ -14,12 +15,12 @@ export default function Header() {
           <a className={styles.link} href="#">
             События
           </a>
-          <a className={styles.link} href="#">
+          <Link  className={styles.link} to="/forms">
             Анкеты
-          </a>
-          <a className={styles.link} href="#">
+          </Link>
+          <Link className={styles.link} to="/">
             Профиль
-          </a>
+          </Link>
         </div>
       </header>
       <div className={styles.line}></div>

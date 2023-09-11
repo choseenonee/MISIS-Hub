@@ -21,7 +21,6 @@ export default function Registration() {
   const [search, setSearch] = useState('');
   const [customTag, setCustomTag] = useState('');
   const [finalTags, setFinalTags] = useState([]);
-  console.log(finalTags);
   useEffect(() => {
     axios
       .get('http://127.0.0.1:8000/database/get_all_tags')
