@@ -147,7 +147,7 @@ async def menu_answer(message: types.Message, state: FSMContext):
             'login': User.login
         }
         if requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).json()['random_coffee_active'] == True:
-            await message.answer('Random Coffee включён')
+            await message.answer('Функция Random Coffee включена')
             await task()
             return
         else:
