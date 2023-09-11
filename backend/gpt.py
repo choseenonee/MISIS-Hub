@@ -2,26 +2,32 @@ import os
 from typing import List
 
 import openai
+from fastapi import HTTPException
 from dotenv import load_dotenv
 
 
 def send_prompt(prompt):
-    openai.api_key = os.getenv('GPT_API_KEY')
-    response = openai.Completion.create(
-        engine='text-davinci-003',
-        prompt=prompt,
-        temperature=0.5,
-        max_tokens=1300,
-        n=1,
-        stop=None
-    )
+    try:
+        openai.api_key = os.getenv('GPT_API_KEY')
+        response = openai.Completion.create(
+            engine='text-davinci-003',
+            prompt=prompt,
+            temperature=0.5,
+            max_tokens=1300,
+            n=1,
+            stop=None
+        )
 
-    return response.choices[0].text.strip()
+        return response.choices[0].text.strip()
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=429, detail="too many GPT requests! wait a minute!")
 
 
 def validate_tag(tag: str) -> bool:
     if 0 < len(tag.split(' ')) < 3 and tag[0].isupper():
-        prompt = f'''Ответь да, если {tag} может быть тегом или нет. Под тэгом я имею ввиду hard, soft skills, а так же чьи-то интересы, хобби, предпочтения, занятия, мировоззрение, вкусы. Отвечай только да или нет.'''
+        # prompt = f'''Ответь да, если {tag} может быть тегом или нет. Под тэгом я имею ввиду hard, soft skills, а так же чьи-то интересы, хобби, предпочтения, занятия, мировоззрение, вкусы. Отвечай только да или нет.'''
+        prompt = f'''Является ли {tag} занятием или умением или профессией или чертой характера или хобби или интересом или предпочтением или мировоззрением. Отвечай только да или нет.'''
 
         answer = send_prompt(prompt)
 

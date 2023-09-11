@@ -32,6 +32,7 @@ class AuthUser(GetUserFromDB):
 
 class AddUserRandomCoffeeConfig(GetUserFromDB):
     telegram: str
+    telegram_id: str
     random_coffee_days_delta: int
 
 
