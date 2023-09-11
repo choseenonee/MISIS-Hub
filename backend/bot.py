@@ -132,6 +132,7 @@ async def text(message: types.Message, state: FSMContext):
     await message.answer(f"Ты будешь получать Random Coffee раз в {int(message.text)} дней")
     # r = requests.get('http://127.0.0.1:8000/get_matches')
     # print(r.text)
+    await task()
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons = ["1", "2"]
     keyboard.add(*buttons)
@@ -146,7 +147,8 @@ async def menu_answer(message: types.Message, state: FSMContext):
             'login': User.login
         }
         if requests.post('http://127.0.0.1:8000/database/get_user_for_tg', json = datas).json()['random_coffee_active'] == True:
-            await message.answer('У тебя уже включена данная функция')
+            await message.answer('Random Coffee включён')
+            await task()
             return
         else:
             await enter_login()
@@ -157,18 +159,19 @@ async def menu_answer(message: types.Message, state: FSMContext):
         return
 
 async def task():
-    while True:
-        print(1)
-        r = requests.get('http://127.0.0.1:8000/get_matches').json()
-        questions = requests.get('http://127.0.0.1:8000/get_questions').json()
-        first = r[0][1]
-        second = r[0][0]
-        await bot.send_message(second["telegram_id"], f'Вот твой новый собеседник!\n\n@{second["telegram"]}\nИмя: {second["name"]}\nОбщага: {second["dormitory"]}\nОписание: {second["description"]}\n\nДержи темы для разговора\n{questions}')
-        await bot.send_message(first["telegram_id"], f'Вот твой новый собеседник!\n\n@{first["telegram"]}\nИмя: {first["name"]}\nОбщага: {first["dormitory"]}\nОписание: {first["description"]}\n\nДержи темы для разговора\n{questions}')
-        await asyncio.sleep(60)
+    # while True:
+    print(1)
+    r = requests.get('http://127.0.0.1:8000/get_matches').json()
+    print(r)
+    questions = requests.get('http://127.0.0.1:8000/get_questions').json()
+    first = r[0][0]
+    second = r[0][1]
+    await bot.send_message(second["telegram_id"], f'Вот твой новый собеседник!\n\nTelegram: @{second["telegram"]}\nИмя: {second["name"]}\nОбщага: {second["dormitory"]}\nОписание: {second["description"]}\n\nДержи темы для разговора\n{questions}')
+    await bot.send_message(second["telegram_id"], f'Вот твой новый собеседник!\n\nTelegram: @{first["telegram"]}\nИмя: {first["name"]}\nОбщага: {first["dormitory"]}\nОписание: {first["description"]}\n\nДержи темы для разговора\n{questions}')
+    await asyncio.sleep(3600)
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.create_task(task())
+    # loop = asyncio.get_event_loop()
+    # loop.create_task(task())
 
     executor.start_polling(dp, skip_updates=True)
